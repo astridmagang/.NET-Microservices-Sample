@@ -38,10 +38,10 @@ namespace OrderService.MessageBus.RecievedMessage
             var factory = new ConnectionFactory()
             {
                 Uri = new Uri(_uri),
-                //HostName = _hostName,
-                //Port = _port,
-                //UserName = _userName,
-                //Password = _password,
+                HostName = _hostName,
+                Port = _port,
+                UserName = _userName,
+                Password = _password,
             };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();

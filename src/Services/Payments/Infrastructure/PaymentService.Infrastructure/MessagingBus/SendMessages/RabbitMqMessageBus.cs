@@ -57,9 +57,9 @@ namespace PaymentService.Infrastructure.MessagingBus.SendMessages
                 var factory = new ConnectionFactory()
                 {
                     Uri = new Uri(_uri),
-                    //HostName = _hostName,
-                    //UserName = _userName,
-                    //Password = _password
+                    HostName = _hostName,
+                    UserName = _userName,
+                    Password = _password
                 };
                 _connection = factory.CreateConnection();
             }

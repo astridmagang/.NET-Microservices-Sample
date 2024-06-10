@@ -20,9 +20,8 @@ namespace BasketService.Model.Services.BasketService
 {
     public class BasketService : IBasketService
     {
-        private readonly BasketDataBaseContext context;
         private readonly IMapper mapper;
-        private IMessageBus messageBus;
+        private readonly IMessageBus messageBus;
         private readonly ICacheService _cacheService;
         private readonly IProductService _productService;
         private readonly string queueName_BasketCheckout;
@@ -32,7 +31,6 @@ namespace BasketService.Model.Services.BasketService
             ICacheService cacheService,
             IProductService productService)
         {
-            this.context = context;
             this.mapper = mapper;
             this.messageBus = messageBus;
             _cacheService = cacheService;
@@ -123,9 +121,12 @@ namespace BasketService.Model.Services.BasketService
         {
             var basketItems = _cacheService.GetList<BasketItem>(ConstantExtension.GetBasketItemListKey(userId));
             if (basketItems == null)
-                throw new Exception("BasketItem Not Found...!");
+            {
+                string paramError = "BasketItem Not Found...!";
+                throw new ArgumentNullException(paramError);
+            }
 
-            basketItems.Remove(basketItems.FirstOrDefault(p => p.Id == itemId));
+            basketItems.Remove(basketItems.Find(p => p.Id == itemId));
 
             _cacheService.SetList<BasketItem>(ConstantExtension.GetBasketItemListKey(userId), basketItems);
         }
@@ -134,7 +135,7 @@ namespace BasketService.Model.Services.BasketService
         {
             var basketItems = _cacheService.GetList<BasketItem>(ConstantExtension.GetBasketItemListKey(userId));
 
-            basketItems.FirstOrDefault(p => p.Id == itemId)?.SetQuantity(quantity);
+            basketItems.Find(p => p.Id == itemId)?.SetQuantity(quantity);
 
             _cacheService.SetList<BasketItem>(ConstantExtension.GetBasketItemListKey(userId), basketItems);
         }
@@ -183,7 +184,10 @@ namespace BasketService.Model.Services.BasketService
             var basket = _cacheService.Get<Basket>(ConstantExtension.GetBasketKey(userId));
 
             if (basket == null)
-                throw new Exception("Basket not found....!");
+            {
+                string paramError = "Basket not found....!";
+                throw new ArgumentNullException(paramError);
+            }
 
             basket.DiscountId = discountId;
             _cacheService.Set<Basket>(ConstantExtension.GetBasketKey(userId), basket);

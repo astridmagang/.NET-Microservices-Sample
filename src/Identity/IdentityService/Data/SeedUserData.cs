@@ -22,7 +22,8 @@ namespace IdentityService.Data
 
                 foreach (var user in AddUsers())
                 {
-                    var ss = context.CreateAsync(user, "123321@Aa").Result;
+                    //var ss = context.CreateAsync(user, "123321@Aa").Result;
+                    var ss = context.CreateAsync(user, "123456").Result;
                     if (user.UserName == "sysAdmin")
                         context.AddToRoleAsync(user, "Admin").Wait();
                     else if (user.UserName == "manager")
